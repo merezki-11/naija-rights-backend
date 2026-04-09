@@ -16,7 +16,7 @@ def get_relevant_chunks(query: str, top_k: int = 5) -> list[dict]:
     """Take a user query and return the most relevant constitutional chunks."""
 
     embeddings = GoogleGenerativeAIEmbeddings(
-        model="gemini-embedding-001",
+        model="models/gemini-embedding-001",
         google_api_key=GEMINI_API_KEY
     )
 
