@@ -1,0 +1,10 @@
+fastapi==0.115.0
+uvicorn==0.30.6
+pymupdf==1.24.9
+chromadb==0.4.24
+numpy==1.26.4
+langchain==0.3.7
+langchain-google-genai==2.0.10
+langchain-community==0.3.7
+python-dotenv==1.0.1
+pydantic==2.9.2
