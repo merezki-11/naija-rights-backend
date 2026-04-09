@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Naija Rights: Your Pocket Constitution</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <header class="glass-header">
+            <div class="logo">🇳🇬 Naija<span class="accent">Rights</span></div>
+            <p class="subtitle">Your Pocket Constitution</p>
+        </header>
+
+        <main class="chat-container">
+            <div id="chat-history" class="chat-history">
+                <div class="message ai-message">
+                    <div class="avatar">⚖️</div>
+                    <div class="content">How far? I be Naija Rights, your street-smart AI legal companion. Ask me any question about your constitutional rights, and I go break am down for you! No long talk.</div>
+                </div>
+            </div>
+
+            <div class="input-area glass-input">
+                <textarea id="user-input" placeholder="Wetin you wan know about your rights? (e.g. Can police search my phone?)..." rows="1"></textarea>
+                <button id="send-btn" aria-label="Send">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+                </button>
+            </div>
+        </main>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
