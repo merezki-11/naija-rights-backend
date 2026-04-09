@@ -1,4 +1,6 @@
 import os
+os.environ["ANONYMIZED_TELEMETRY"] = "False"
+os.environ["CHROMA_TELEMETRY"] = "False"
 import time
 import fitz  # PyMuPDF
 import chromadb
@@ -41,19 +43,16 @@ def extract_chunks_from_pdf(pdf_path: str) -> list[dict]:
             if not line:
                 continue
 
-            # Detect chapter headings
             if line.startswith("CHAPTER") and len(line) < 60:
                 save_chunk()
                 current_chapter = line
                 current_text_lines = []
 
-            # Detect part headings
             elif line.startswith("PART") and len(line) < 60:
                 save_chunk()
                 current_part = line
                 current_text_lines = []
 
-            # Detect section numbers like "1.", "33.", "315."
             elif line and line[0].isdigit() and "." in line[:5]:
                 save_chunk()
                 parts = line.split(".", 1)
@@ -64,7 +63,7 @@ def extract_chunks_from_pdf(pdf_path: str) -> list[dict]:
             else:
                 current_text_lines.append(line)
 
-    save_chunk()  # Save the last chunk
+    save_chunk()
     doc.close()
     print(f"Extracted {len(chunks)} chunks from PDF")
     return chunks
@@ -79,10 +78,9 @@ def embed_and_store(chunks: list[dict]):
 
     client = chromadb.PersistentClient(
         path=CHROMA_PATH,
-        settings=Settings(anonymized_telemetry=False)
+        settings=Settings(anonymized_telemetry=False, allow_reset=True)
     )
 
-    # Delete existing collection if it exists to avoid duplicates
     try:
         client.delete_collection("constitution")
         print("Deleted existing collection")
@@ -93,7 +91,6 @@ def embed_and_store(chunks: list[dict]):
 
     print(f"Embedding and storing {len(chunks)} chunks...")
 
-    # Process in batches of 30 to stay under free tier rate limits
     batch_size = 30
     total_batches = (len(chunks) + batch_size - 1) // batch_size
 
@@ -120,7 +117,6 @@ def embed_and_store(chunks: list[dict]):
         current_batch = i // batch_size + 1
         print(f"Stored batch {current_batch} / {total_batches}")
 
-        # Wait 65 seconds between batches to respect free tier rate limit
         if current_batch < total_batches:
             print(f"Waiting 65 seconds before next batch...")
             time.sleep(65)

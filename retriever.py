@@ -1,4 +1,6 @@
 import os
+os.environ["ANONYMIZED_TELEMETRY"] = "False"
+os.environ["CHROMA_TELEMETRY"] = "False"
 import chromadb
 from chromadb.config import Settings
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
@@ -13,31 +15,26 @@ CHROMA_PATH = os.path.join(os.path.dirname(__file__), "chroma_db")
 def get_relevant_chunks(query: str, top_k: int = 5) -> list[dict]:
     """Take a user query and return the most relevant constitutional chunks."""
 
-    # Embed the query using the same model used during ingestion
     embeddings = GoogleGenerativeAIEmbeddings(
         model="gemini-embedding-001",
         google_api_key=GEMINI_API_KEY
     )
 
-    # Connect to the persisted ChromaDB
     client = chromadb.PersistentClient(
         path=CHROMA_PATH,
-        settings=Settings(anonymized_telemetry=False)
+        settings=Settings(anonymized_telemetry=False, allow_reset=True)
     )
 
     collection = client.get_collection("constitution")
 
-    # Embed the query
     query_vector = embeddings.embed_query(query)
 
-    # Search ChromaDB for top_k most similar chunks
     results = collection.query(
         query_embeddings=[query_vector],
         n_results=top_k,
         include=["documents", "metadatas", "distances"]
     )
 
-    # Format results into clean list of dicts
     chunks = []
     for i in range(len(results["documents"][0])):
         chunks.append({
@@ -53,7 +50,6 @@ def get_relevant_chunks(query: str, top_k: int = 5) -> list[dict]:
 
 
 if __name__ == "__main__":
-    # Quick test
     test_query = "Can police search my home without permission?"
     print(f"Query: {test_query}\n")
     results = get_relevant_chunks(test_query)

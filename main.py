@@ -58,8 +58,8 @@ def chat(request: ChatRequest):
         raise HTTPException(status_code=400, detail="Question cannot be empty")
 
     try:
-        # Step 1: Retrieve relevant chunks
-        chunks = get_relevant_chunks(request.question, top_k=5)
+        # Step 1: Retrieve relevant chunks — top 8 for wider coverage
+        chunks = get_relevant_chunks(request.question, top_k=8)
 
         # Step 2: Generate answer
         result = generate_answer(

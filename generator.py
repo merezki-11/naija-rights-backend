@@ -41,7 +41,6 @@ def generate_answer(
 
     context = build_context(chunks)
 
-    # Build the system prompt
     tone_instruction = (
         "Use very simple, friendly language that a 15-year-old Nigerian student can easily understand. "
         "Avoid all legal jargon. Use short sentences and relatable examples."
@@ -65,30 +64,25 @@ Rules:
 Constitutional Context:
 {context}"""
 
-    # Build the LLM
     llm = ChatGoogleGenerativeAI(
         model="gemini-2.5-flash",
         google_api_key=GEMINI_API_KEY,
         temperature=0.3
     )
 
-    # Build message history
     messages = [SystemMessage(content=system_prompt)]
 
-    for turn in history[-5:]:  # Only last 5 turns
+    for turn in history[-5:]:
         if turn["role"] == "user":
-            messages.append(HumanMessage(content=turn["content"]))
+            messages.append(HumanMessage(content=str(turn["content"])))
         else:
-            messages.append(HumanMessage(content=f"[Assistant]: {turn['content']}"))
+            messages.append(HumanMessage(content=f"[Assistant]: {str(turn['content'])}"))
 
-    # Add current question
-    messages.append(HumanMessage(content=query))
+    messages.append(HumanMessage(content=str(query)))
 
-    # Call Gemini
     response = llm.invoke(messages)
     answer = response.content
 
-    # Extract citations from chunks
     citations = []
     for chunk in chunks:
         citations.append({
@@ -106,7 +100,6 @@ Constitutional Context:
 
 
 if __name__ == "__main__":
-    # Quick test
     from retriever import get_relevant_chunks
 
     test_query = "Can police search my home without permission?"
