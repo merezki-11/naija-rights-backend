@@ -165,26 +165,28 @@ body {
 
 .input-area {
     margin-top: 1rem;
-    padding: 1rem;
+    padding: 0.75rem; /* reduced padding for tiny screens */
     border-radius: 16px;
     background: rgba(15, 23, 42, 0.8);
     border: 1px solid var(--glass-border);
     display: flex;
-    align-items: flex-end;
-    gap: 1rem;
+    align-items: center; /* fixed vertical alignment */
+    gap: 0.75rem; /* slightly tighter */
 }
 
 textarea {
     flex: 1;
+    min-width: 0; /* CRITICAL: prevents textarea from stretching flex parent out of screen bounds */
     background: transparent;
     border: none;
     color: var(--text-main);
     font-family: inherit;
-    font-size: 1.05rem;
+    font-size: 1rem; /* Slightly smaller font to fit narrow screens */
     line-height: 1.4;
     resize: none;
+    height: 24px; /* Force an exact initial height */
     max-height: 150px;
-    padding: 0.6rem 0.2rem;
+    padding: 0; /* Removing internal padding, centering with flex */
     outline: none;
 }
 
